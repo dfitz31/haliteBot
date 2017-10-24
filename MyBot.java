@@ -10,7 +10,7 @@ public class MyBot {
         final GameMap gameMap = networking.initialize("Tamagocchi");
         final ArrayList<Move> moveList = new ArrayList<>();
 		final ArrayList<Planet> planetList = new ArrayList<>();
-		int turn = 0; 
+		 
 		
 
         for (;;) {
@@ -27,6 +27,7 @@ public class MyBot {
                     if(entity instanceof Ship){
 						continue;
 					}
+					
 					Planet planet = (Planet)entity;
 					
 					if (planet.getOwner() == gameMap.getMyPlayerId() && !planet.isFull()) {
@@ -46,19 +47,17 @@ public class MyBot {
                     }
 					
 					if (planet.getOwner() != gameMap.getMyPlayerId() && !planet.isFull()) {
-						 
+						 Ship enemy = null;
 						for (Entity nearby : gameMap.nearbyEntitiesByDistance(ship).values()){
 							for(int dockedId : planet.getDockedShips()){
 								if(nearby.getId() == dockedId){
-									Ship enemy = (Ship)nearby;
+									enemy = (Ship)nearby;
 									break;
 									
 								}
 							}
 						}
 			
-						
-						
 						
 						final ThrustMove newThrustMove = new Navigation(ship, enemy).navigateTowards(gameMap, enemy, Constants.MAX_SPEED, true, Constants.MAX_CORRECTIONS, Math.PI/180);
 						if (newThrustMove != null) {
@@ -83,13 +82,14 @@ public class MyBot {
 						break;
 					}
 
-                    else continue;
+                   
 
                     
                 }
             }
             Networking.sendMoves(moveList);
-			turn++;
+			
         }
     }
 }
+
